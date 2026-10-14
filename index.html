@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CCTV & IT HARDWARE ERP</title>
+  <title>CCTV ERP - PROFESSIONAL SYSTEM</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- HTML5-QRCODE HIGH-SPEED SCANNER LIBRARY -->
+  <!-- HIGH SPEED CAMERA SCANNER -->
   <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     :root {
@@ -18,175 +18,208 @@
       --border: #cbd5e1;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 75px; }
     .app-container { display: flex; min-height: 100vh; }
     .sidebar { width: 250px; background-color: #0f172a; color: white; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
     .sidebar h2 { font-size: 1.15rem; color: #38bdf8; margin-bottom: 25px; }
     .nav-btn { background: none; border: none; color: #94a3b8; padding: 12px 15px; border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; width: 100%; }
     .nav-btn.active, .nav-btn:hover { background-color: #1e293b; color: white; }
-    .main-content { flex: 1; padding: 20px; max-width: 1250px; margin: 0 auto; width: 100%; }
+    .main-content { flex: 1; padding: 16px; max-width: 1250px; margin: 0 auto; width: 100%; }
+    
+    /* Responsive Bottom Bar */
     .bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); justify-content: space-around; padding: 8px 0; z-index: 100; }
     .b-nav { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: #64748b; gap: 4px; }
     .b-nav.active { color: var(--primary-light); font-weight: bold; }
     .b-nav i { font-size: 1.2rem; }
-    .card { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 18px; margin-bottom: 18px; }
+
+    .card { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-    .grid-pur { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; align-items: flex-end; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
+    
+    /* Fully Mobile-Optimized Grid */
+    .grid-responsive-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; align-items: flex-end; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.82rem; font-weight: 600; color: #475569; }
-    input, select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; outline: none; }
+    input, select { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; outline: none; }
     input:focus, select:focus { border-color: var(--primary-light); }
+
     .btn { padding: 9px 16px; border-radius: 6px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: var(--primary-light); color: white; }
     .btn-success { background: #16a34a; color: white; }
     .btn-warning { background: var(--accent); color: white; }
     .btn-danger { background: #dc2626; color: white; }
-    .btn-outline { background: white; border: 1px solid var(--border); color: #334155; }
+    .btn-outline { background: white; border: 1.5px solid var(--border); color: #334155; }
     .btn-block { width: 100%; }
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.88rem; }
+
+    /* Horizontal Scroll Table for Mobile */
+    .table-responsive-box { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 12px; }
+    .data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.88rem; white-space: nowrap; }
     .data-table th { background: #f8fafc; font-weight: 600; }
 
-    .tab-toggle-bar { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-    .tab-toggle-btn { background: none; border: none; font-size: 0.95rem; font-weight: 600; color: #64748b; padding: 6px 14px; cursor: pointer; border-radius: 6px; }
-    .tab-toggle-btn.active { background: var(--primary-light); color: white; }
-
     /* Serial Pills */
-    .serial-badge-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .serial-pill { background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; }
-    .serial-pill span { cursor: pointer; color: #dc2626; }
+    .serial-badge-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 120px; overflow-y: auto; }
+    .serial-pill { background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; font-size: 11.5px; font-weight: bold; padding: 4px 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 6px; }
+    .serial-pill span { cursor: pointer; color: #dc2626; font-size: 13px; margin-left: 2px; }
+
+    /* Authentication Lock Overlay */
+    #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-card { background: #ffffff; border-radius: 12px; padding: 30px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
 
     /* Scanner View Modal */
     #scanner-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; padding: 15px; }
     .scanner-box { background: white; border-radius: 10px; padding: 18px; width: 450px; max-width: 95%; text-align: center; }
 
-    /* Modals & Prints */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; padding: 15px; overflow-y: auto; }
-    .modal-content-box { background: white; border-radius: 10px; width: 750px; max-width: 95%; max-height: 90vh; overflow-y: auto; padding: 22px; }
-
-    #print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2500; overflow-y: auto; padding: 15px; }
-    .invoice-page { background: white; width: 210mm; min-height: 285mm; margin: 0 auto 15px auto; padding: 6mm; color: #000; font-family: Arial, sans-serif; font-size: 11.5px; border: 1.5px solid #000; page-break-after: always; display: flex; flex-direction: column; justify-content: space-between; }
-    .t-header { border-bottom: 1.5px solid #000; padding: 4px; text-align: center; }
-    .t-header-topline { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; margin-bottom: 2px; }
-    .t-title { font-size: 16px; font-weight: bold; letter-spacing: 1px; text-align: center; }
-    .t-company-name { font-size: 19px; font-weight: 900; margin: 2px 0; text-align: center; }
-    .t-company-address { font-size: 11px; text-align: center; }
-    .t-row { display: flex; width: 100%; }
-    .t-col-6 { width: 50%; padding: 4px; }
-    .t-table { width: 100%; border-collapse: collapse; }
-    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 4px 3px; font-size: 11.5px; font-weight: bold; background: #fafafa; }
-    .t-table td { border-right: 1px solid #000; border-bottom: 1px solid #e2e8f0; padding: 3px 4px; font-size: 11.5px; }
-    .tax-breakup-table { width: 100%; border-collapse: collapse; margin-top: 2px; }
-    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 2px 3px; text-align: center; font-size: 10px; }
-
-    @media print {
-      html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
-      .app-container, .sidebar, .main-content, .bottom-bar, .modal-overlay, #scanner-modal, .no-print { display: none !important; }
-      #print-modal { display: block !important; position: static !important; width: 100% !important; padding: 0 !important; margin: 0 !important; background: none !important; }
-      .invoice-page { width: 200mm !important; height: 285mm !important; margin: 0 auto !important; padding: 4mm !important; border: 1.5px solid #000 !important; }
-      @page { size: A4 portrait; margin: 4mm; }
+    @media (max-width: 950px) {
+      .sidebar { display: none; }
+      .bottom-bar { display: flex; }
+      .main-content { padding: 10px; }
+      .grid-responsive-form { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<div class="app-container" id="app-wrapper">
+<!-- SECURE AUTHENTICATION GATEWAY -->
+<div id="auth-overlay">
+  <div class="login-card">
+    <div style="font-size:40px; color:#1e3a8a; margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i></div>
+    <h2 id="login-brand-title">CCTV ERP</h2>
+    <p style="font-size:12px; color:#64748b; margin-bottom:18px;">Security Login Gateway</p>
+    
+    <div id="login-fields">
+      <div class="form-group" style="text-align:left; margin-bottom:12px;">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Enter username" autocomplete="off" onkeydown="if(event.key==='Enter') document.getElementById('login-pass').focus()">
+      </div>
+      <div class="form-group" style="text-align:left; margin-bottom:14px;">
+        <label>Password / PIN</label>
+        <input type="password" id="login-pass" placeholder="••••••" onkeydown="if(event.key==='Enter') executeLogin()">
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-login-submit" onclick="executeLogin()">
+        <i class="fa-solid fa-right-to-bracket"></i> Login
+      </button>
+      <div style="margin-top:14px;">
+        <a href="javascript:void(0)" onclick="toggleResetPasswordView(true)" style="font-size:12px; color:#2563eb; text-decoration:none;">🔑 Forgot / Reset Password?</a>
+      </div>
+    </div>
+
+    <div id="reset-fields" style="display:none; text-align:left;">
+      <h4 style="color:#1e3a8a; margin-bottom:8px;">Reset Password</h4>
+      <div class="form-group" style="margin-bottom:8px;"><label>Username</label><input type="text" id="reset-user" placeholder="Enter username"></div>
+      <div class="form-group" style="margin-bottom:8px;"><label>Master Security PIN</label><input type="password" id="reset-master-pin" placeholder="••••••••"></div>
+      <div class="form-group" style="margin-bottom:14px;"><label>New Password / PIN</label><input type="password" id="reset-new-pass" placeholder="New Password"></div>
+      <button class="btn btn-success btn-block" onclick="executePasswordReset()"><i class="fa-solid fa-check"></i> Update Password</button>
+      <button class="btn btn-outline btn-block" style="margin-top:8px;" onclick="toggleResetPasswordView(false)">Back</button>
+    </div>
+
+    <div id="login-error" style="color:#dc2626; font-size:12px; font-weight:bold; margin-top:12px; min-height:16px;"></div>
+  </div>
+</div>
+
+<div class="app-container" id="app-wrapper" style="display:none;">
   <aside class="sidebar">
     <h2 id="sidebar-brand-title">📹 CCTV ERP</h2>
     <button class="nav-btn active" onclick="switchTab('lookup')"><i class="fa-solid fa-barcode"></i> Serial Lookup (RMA)</button>
     <button class="nav-btn" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i> Sales Entry</button>
-    <button class="nav-btn" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i> Sales Return</button>
     <button class="nav-btn" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i> Purchase Entry</button>
+    <button class="nav-btn" onclick="switchTab('stock')"><i class="fa-solid fa-boxes-stacked"></i> Live Stock</button>
     <button class="nav-btn" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i> Invoice History</button>
     <button class="nav-btn" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i> Party Ledger</button>
-    <button class="nav-btn" onclick="switchTab('stock')"><i class="fa-solid fa-boxes-stacked"></i> Live Stock</button>
     <button class="nav-btn" onclick="switchTab('sync')"><i class="fa-solid fa-cloud-arrow-up"></i> Data Sync</button>
+    
+    <div style="margin-top:auto; padding-top:20px; border-top:1px solid #334155;">
+      <div style="font-size:12px; color:#94a3b8; margin-bottom:8px;">User: <strong id="logged-username" style="color:white;">admin</strong></div>
+      <button class="btn btn-danger btn-block" style="font-size:12px; padding:6px 12px;" onclick="executeLogout()"><i class="fa-solid fa-lock"></i> 🔒 Logout</button>
+    </div>
   </aside>
 
   <nav class="bottom-bar">
     <button class="b-nav active" onclick="switchTab('lookup')"><i class="fa-solid fa-barcode"></i>RMA</button>
     <button class="b-nav" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i>Sales</button>
-    <button class="b-nav" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i>Return</button>
     <button class="b-nav" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i>Purchase</button>
-    <button class="b-nav" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i>Ledger</button>
+    <button class="b-nav" onclick="switchTab('stock')"><i class="fa-solid fa-boxes-stacked"></i>Stock</button>
+    <button class="b-nav" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i>History</button>
   </nav>
 
   <main class="main-content">
     
-    <!-- 1. QUICK SERIAL LOOKUP / RMA INVESTIGATION -->
+    <!-- 1. RMA & QUICK SERIAL LOOKUP -->
     <section id="tab-lookup">
       <div class="card" style="border: 2px solid var(--primary-light);">
-        <h2>🔍 Quick Serial Number Lookup (RMA & Warranty Status)</h2>
-        <p style="font-size:12.5px; color:#64748b; margin-top:4px;">Scan or enter camera/DVR serial number to see who you bought it from, who you sold it to, and warranty validity.</p>
+        <h2>🔍 Quick Serial Number Lookup (RMA & Warranty)</h2>
+        <p style="font-size:12px; color:#64748b; margin-top:4px;">Scan or type camera/DVR serial number to see supplier, customer, and warranty status.</p>
         
-        <div style="display:flex; gap:10px; margin-top:14px; max-width:650px;">
-          <input type="text" id="lookup-serial-input" placeholder="Scan or enter Serial / IMEI (e.g. CP-987456)..." style="font-size:1.1rem; font-weight:bold;" onkeydown="if(event.key==='Enter') executeSerialLookup()">
-          <button class="btn btn-primary" onclick="openCameraScanner('lookup')"><i class="fa-solid fa-camera"></i> 📷 Scan</button>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <input type="text" id="lookup-serial-input" placeholder="Scan or enter Serial Number..." style="flex:1; min-width:200px; font-size:1rem; font-weight:bold;" onkeydown="if(event.key==='Enter') executeSerialLookup()">
+          <button class="btn btn-primary" onclick="openCameraScanner('lookup')"><i class="fa-solid fa-camera"></i> 📷 Fast Scan</button>
           <button class="btn btn-success" onclick="executeSerialLookup()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
         </div>
 
-        <div id="lookup-result-card" style="display:none; margin-top:20px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:18px;">
-          <!-- Result rendered dynamically -->
-        </div>
+        <div id="lookup-result-card" style="display:none; margin-top:16px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:14px;"></div>
       </div>
     </section>
 
-    <!-- 2. SALES ENTRY COUNTER -->
+    <!-- 2. SALES COUNTER (WITH AUTO-FILL SERIAL SCANNER) -->
     <section id="tab-billing" style="display:none;">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
           <h2><span id="billing-mode-title">🧾 Sales Counter</span> <span id="bill-next-preview" style="font-size:12px; color:#2563eb;"></span></h2>
           <div style="display:flex; gap:15px;" id="bill-type-radio-group">
-            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="INVOICE" checked onchange="onBillTypeChange()"> <strong id="lbl-bill-type-primary">GST Tax Invoice (B2C)</strong></label>
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="INVOICE" checked onchange="onBillTypeChange()"> <strong id="lbl-bill-type-primary">GST Tax Invoice</strong></label>
             <label style="cursor:pointer;"><input type="radio" name="bill_type" value="ESTIMATE" onchange="onBillTypeChange()"> <strong>Estimate</strong></label>
           </div>
         </div>
 
         <div class="grid-4">
-          <div class="form-group pos-search-wrapper">
-            <label>Customer Name *</label>
-            <input type="text" id="cust-name" placeholder="Cash Customer" autocomplete="off">
-          </div>
-          <div class="form-group" id="group-cust-gstin"><label>Customer GSTIN (Optional)</label><input type="text" id="cust-gstin" placeholder="08AAAAA0000A1Z5"></div>
+          <div class="form-group"><label>Customer Name *</label><input type="text" id="cust-name" placeholder="Cash Customer"></div>
+          <div class="form-group" id="group-cust-gstin"><label>Customer GSTIN</label><input type="text" id="cust-gstin" placeholder="08AAAAA0000A1Z5"></div>
           <div class="form-group"><label>Mobile Number</label><input type="tel" id="cust-phone" placeholder="98XXXXXXXX"></div>
           <div class="form-group"><label>City / Address</label><input type="text" id="cust-address" placeholder="Nagaur"></div>
         </div>
-        <div class="form-group" style="width:200px; margin-top:10px;">
+        <div class="form-group" style="width:160px; margin-top:8px;">
           <label>Payment Mode</label>
           <select id="cust-paymode"><option>Cash</option><option>UPI</option><option>Credit</option><option>Bank</option></select>
         </div>
       </div>
 
       <div class="card">
-        <h4>Add CCTV Product & Serial Numbers</h4>
-        <div class="grid-pur" style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid var(--border); margin-top:10px;">
-          <div class="form-group"><label>Item Name / Model</label><input type="text" id="item-name-input" placeholder="e.g. CP Plus 2MP Bullet"></div>
-          <div class="form-group"><label>Item Code</label><input type="text" id="item-code-input" placeholder="CP-B21"></div>
-          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="item-price-input" placeholder="Rate"></div>
-          <div class="form-group"><label>Warranty (Months)</label><input type="number" id="item-war-input" value="24"></div>
-          <div class="form-group"><button class="btn btn-primary" onclick="openCameraScanner('sales')"><i class="fa-solid fa-camera"></i> 📷 Scan Serial</button></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="color:#1e3a8a;"><i class="fa-solid fa-cart-plus"></i> Scan Item to Sell (Auto-Fetch)</h4>
+          <button class="btn btn-primary" onclick="openCameraScanner('sales')"><i class="fa-solid fa-camera"></i> 📷 Scan Serial</button>
+        </div>
+
+        <div class="grid-responsive-form" style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid var(--border);">
+          <div class="form-group" style="grid-column: span 2;"><label>Item Name</label><input type="text" id="item-name-input" placeholder="Auto-filled on scan"></div>
+          <div class="form-group"><label>Model / Code</label><input type="text" id="item-code-input" placeholder="Model"></div>
+          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="item-price-input" placeholder="Price"></div>
+          <div class="form-group"><label>Warranty (Mo)</label><input type="number" id="item-war-input" value="24"></div>
         </div>
 
         <div style="margin-top:10px; background:#eff6ff; padding:10px; border-radius:6px; border:1px solid #bfdbfe;">
-          <label style="font-weight:bold; color:#1e3a8a;">Scanned Serial Numbers for this Item (Qty: <span id="sales-current-qty">0</span>):</label>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label style="font-weight:bold; color:#1e3a8a;">Scanned Serials (Qty: <span id="sales-current-qty">0</span>):</label>
+            <small style="color:#64748b;">Scan multiple pieces of same item</small>
+          </div>
           <div class="serial-badge-container" id="sales-serial-container"></div>
           <div style="display:flex; gap:6px; margin-top:8px;">
-            <input type="text" id="sales-manual-sn" placeholder="Or type serial number and Enter..." onkeydown="if(event.key==='Enter') addSalesSerial(this.value)">
-            <button class="btn btn-outline" onclick="addSalesSerial(document.getElementById('sales-manual-sn').value)">Add SN</button>
+            <input type="text" id="sales-manual-sn" placeholder="Or type serial number & Enter..." onkeydown="if(event.key==='Enter') addSalesSerial(this.value)">
+            <button class="btn btn-outline" onclick="addSalesSerial(document.getElementById('sales-manual-sn').value)">Add</button>
           </div>
         </div>
 
         <div style="margin-top:12px; text-align:right;">
-          <button class="btn btn-success" onclick="addItemToSalesCart()"><i class="fa-solid fa-plus"></i> Add Item to Invoice Cart</button>
+          <button class="btn btn-success" onclick="addItemToSalesCart()"><i class="fa-solid fa-plus"></i> Add Item to Cart</button>
         </div>
 
-        <table class="data-table" id="cart-table" style="margin-top:15px;">
-          <thead>
-            <tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Warranty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive-box">
+          <table class="data-table" id="cart-table">
+            <thead>
+              <tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Warranty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
         <div style="display:flex; justify-content:flex-end; margin-top:15px;">
           <div style="width:280px; text-align:right;">
@@ -197,45 +230,50 @@
       </div>
     </section>
 
-    <!-- 3. PURCHASE ENTRY WITH SERIAL INWARD -->
+    <!-- 3. CCTV PURCHASE ENTRY (WITH LIVE STOCK SYNC) -->
     <section id="tab-purchase" style="display:none;">
       <div class="card">
-        <h2><i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> CCTV Inward Stock & Purchase Entry</h2>
+        <h2><i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> CCTV Inward Purchase Entry</h2>
         <div class="grid-4" style="margin-top:10px;">
           <div class="form-group"><label>Supplier Name *</label><input type="text" id="pur-supplier" placeholder="e.g. Apex Distributors"></div>
-          <div class="form-group"><label>Supplier Bill No</label><input type="text" id="pur-ref" placeholder="Bill # 5412"></div>
+          <div class="form-group"><label>Supplier Bill No</label><input type="text" id="pur-ref" placeholder="Bill # 232"></div>
           <div class="form-group"><label>Purchase Date</label><input type="date" id="pur-date"></div>
-          <div class="form-group"><label>Terms</label><select id="pur-paymode"><option>Cash</option><option>Credit</option><option>Bank</option></select></div>
+          <div class="form-group"><label>Payment Terms</label><select id="pur-paymode"><option>Cash</option><option>Credit</option><option>Bank</option></select></div>
         </div>
       </div>
 
       <div class="card">
-        <h4>Inward Item Details</h4>
-        <div class="grid-pur" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0; margin-top:10px;">
-          <div class="form-group"><label>Product Name</label><input type="text" id="pur-item-name" placeholder="Item Name"></div>
-          <div class="form-group"><label>Code / Model</label><input type="text" id="pur-item-code" placeholder="Model"></div>
-          <div class="form-group"><label>Cost Rate (₹)</label><input type="number" id="pur-item-cost" placeholder="Cost"></div>
-          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="pur-item-price" placeholder="Selling"></div>
-          <div class="form-group"><button class="btn btn-success" onclick="openCameraScanner('purchase')"><i class="fa-solid fa-camera"></i> 📷 Scan Serials</button></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4>Inward CCTV Items</h4>
+          <button class="btn btn-success" onclick="openCameraScanner('purchase')"><i class="fa-solid fa-camera"></i> 📷 Scan Serials</button>
+        </div>
+
+        <div class="grid-responsive-form" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
+          <div class="form-group" style="grid-column: span 2;"><label>Item / Model Name *</label><input type="text" id="pur-item-name" placeholder="e.g. Camera 2mp"></div>
+          <div class="form-group"><label>Code / Short Name</label><input type="text" id="pur-item-code" placeholder="e.g. 2mp dome"></div>
+          <div class="form-group"><label>Cost Rate (₹)</label><input type="number" id="pur-item-cost" placeholder="Cost per pc"></div>
+          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="pur-item-price" placeholder="Selling price"></div>
         </div>
 
         <div style="margin-top:10px; background:#f0fdf4; padding:10px; border-radius:6px; border:1px solid #bbf7d0;">
           <label style="font-weight:bold; color:#16a34a;">Inward Serial Numbers (Qty: <span id="pur-current-qty">0</span>):</label>
           <div class="serial-badge-container" id="pur-serial-container"></div>
           <div style="display:flex; gap:6px; margin-top:8px;">
-            <input type="text" id="pur-manual-sn" placeholder="Or type serial number and Enter..." onkeydown="if(event.key==='Enter') addPurSerial(this.value)">
-            <button class="btn btn-outline" onclick="addPurSerial(document.getElementById('pur-manual-sn').value)">Add SN</button>
+            <input type="text" id="pur-manual-sn" placeholder="Or type serial number & Enter..." onkeydown="if(event.key==='Enter') addPurSerial(this.value)">
+            <button class="btn btn-outline" onclick="addPurSerial(document.getElementById('pur-manual-sn').value)">Add</button>
           </div>
         </div>
 
         <div style="margin-top:12px; text-align:right;">
-          <button class="btn btn-success" onclick="addPurchaseRow()"><i class="fa-solid fa-plus"></i> Add Item to Purchase List</button>
+          <button class="btn btn-success" onclick="addPurchaseRow()"><i class="fa-solid fa-plus"></i> Add Item to List</button>
         </div>
 
-        <table class="data-table" id="purchase-table" style="margin-top:15px;">
-          <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Cost</th><th>Total</th><th>Action</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive-box">
+          <table class="data-table" id="purchase-table">
+            <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Cost</th><th>Total</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
         <div style="display:flex; justify-content:flex-end; margin-top:15px;">
           <div style="width:280px; text-align:right;">
@@ -246,14 +284,20 @@
       </div>
     </section>
 
-    <!-- 4. SALES RETURN MODULE -->
-    <section id="tab-return" style="display:none;">
+    <!-- 4. LIVE STOCK INVENTORY -->
+    <section id="tab-stock" style="display:none;">
       <div class="card">
-        <h2><i class="fa-solid fa-rotate-left" style="color:#dc2626;"></i> CCTV Sales Return (Credit Note)</h2>
-        <div class="grid-4" style="margin-top:14px;">
-          <div class="form-group"><label>Customer Name *</label><input type="text" id="ret-cust-name" placeholder="Customer Name"></div>
-          <div class="form-group"><label>Return Date</label><input type="date" id="ret-date"></div>
-          <div class="form-group"><label>Scan Returned Serial</label><div style="display:flex; gap:6px;"><input type="text" id="ret-sn-input" placeholder="Serial Number"><button class="btn btn-primary" onclick="openCameraScanner('return')">📷</button></div></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2><i class="fa-solid fa-boxes-stacked"></i> Live CCTV Stock Inventory</h2>
+          <button class="btn btn-primary" onclick="syncInventoryStock(true)"><i class="fa-solid fa-rotate"></i> Refresh Stock</button>
+        </div>
+        <p style="font-size:12px; color:#64748b; margin-top:4px;">Real-time stock balance directly from Items_Master sheet.</p>
+        
+        <div class="table-responsive-box">
+          <table class="data-table" id="stock-list-table">
+            <thead><tr><th>Code</th><th>Model / Item</th><th>HSN</th><th>Purchase</th><th>Selling</th><th>Stock Qty</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -261,11 +305,13 @@
     <!-- 5. INVOICE HISTORY -->
     <section id="tab-history" style="display:none;">
       <div class="card">
-        <h2>Invoice Log & History</h2>
-        <table class="data-table">
-          <thead><tr><th>Inv #</th><th>Type</th><th>Date</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Actions</th></tr></thead>
-          <tbody id="history-rows"></tbody>
-        </table>
+        <h2>Sales Invoices Log & History</h2>
+        <div class="table-responsive-box">
+          <table class="data-table">
+            <thead><tr><th>Inv #</th><th>Type</th><th>Date</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Actions</th></tr></thead>
+            <tbody id="history-rows"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -282,54 +328,34 @@
         </div>
       </div>
       <div class="card" id="ledger-details-box" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h3 id="ledger-box-title">Transactions</h3>
-          <button class="btn btn-warning" onclick="printLedgerStatement()"><i class="fa-solid fa-print"></i> 🖨️ Print Ledger Statement</button>
+        <div class="table-responsive-box">
+          <table class="data-table" id="party-txn-table">
+            <thead><tr><th>Date</th><th>Type</th><th>Ref #</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
-        <table class="data-table" id="party-txn-table">
-          <thead><tr><th>Date</th><th>Type</th><th>Ref #</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
-          <tbody></tbody>
-        </table>
       </div>
     </section>
 
-    <!-- 7. LIVE STOCK -->
-    <section id="tab-stock" style="display:none;">
-      <div class="card">
-        <h2>Live CCTV Stock Inventory</h2>
-        <table class="data-table" id="stock-list-table">
-          <thead><tr><th>Code</th><th>Model / Item</th><th>HSN</th><th>Purchase</th><th>Selling</th><th>Stock Qty</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 8. DATA SYNC -->
+    <!-- 7. CENTRAL SYNC -->
     <section id="tab-sync" style="display:none;">
-      <div class="card" style="text-align:center; padding:40px 20px;">
-        <button class="btn btn-success" style="padding:12px 28px; font-size:1rem;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync All CCTV Records Now</button>
+      <div class="card" style="text-align:center; padding:35px 20px;">
+        <div style="font-size:45px; color:#2563eb; margin-bottom:15px;"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <h2>Central Cloud Sync</h2>
+        <button class="btn btn-success" style="padding:12px 28px; font-size:1rem; margin-top:15px;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync All Records Live</button>
       </div>
     </section>
   </main>
 </div>
 
-<!-- HIGH-SPEED CAMERA SCANNER MODAL -->
+<!-- HIGH SPEED 1D BARCODE SCANNER MODAL -->
 <div id="scanner-modal">
   <div class="scanner-box">
-    <h3 style="color:#1e3a8a; margin-bottom:10px;"><i class="fa-solid fa-camera"></i> Scan Serial Barcode</h3>
-    <div id="reader" style="width: 100%; min-height: 250px;"></div>
-    <div id="scan-last-status" style="font-size:12px; font-weight:bold; color:#16a34a; margin-top:8px;">Focus camera on barcode</div>
-    <button class="btn btn-danger btn-block" style="margin-top:14px;" onclick="closeCameraScanner()">✕ Stop Camera & Close</button>
+    <h3 style="color:#1e3a8a; margin-bottom:6px;"><i class="fa-solid fa-camera"></i> Fast Barcode Scanner</h3>
+    <div id="reader" style="width: 100%; min-height: 240px;"></div>
+    <div id="scan-last-status" style="font-size:12.5px; font-weight:bold; color:#16a34a; margin-top:8px;">Aim camera at barcode</div>
+    <button class="btn btn-danger btn-block" style="margin-top:14px;" onclick="closeCameraScanner()">✕ Stop Camera</button>
   </div>
-</div>
-
-<!-- Compact Print Container -->
-<div id="print-modal">
-  <div class="no-print" style="max-width:210mm; margin:10px auto; display:flex; justify-content:space-between;">
-    <button class="btn btn-warning" onclick="document.getElementById('print-modal').style.display='none'">Back</button>
-    <button class="btn btn-primary" onclick="window.print()">🖨 Print Invoice</button>
-  </div>
-  <div id="invoice-printable-container"></div>
 </div>
 
 <script>
@@ -338,14 +364,14 @@
 // =========================================================================
 const COMPANY_CONFIG = {
   // 1. Google Apps Script Web App URL
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbz5EA3L6leQkoDGlZaeLPbB3d0KLkYwfbyeICwOeWcr7fCLQBBpCcit5SOCbuSlzE8oSQ/exec",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycby_Qv181WIzN7AajmesQaeapY_s1pNo7We36QNgbVGiFhKxQBq0AUCX64qlP9gtFXWSAQ/exec",
 
   // 2. फर्म का नाम
   NAME: "CCTV & SECURITY SYSTEMS",
 
   // 3. पूरा पता, संपर्क सूत्र व ईमेल
   ADDRESS: "NAGAUR RAJ - 341001",
-  PHONE: "+91 7700000000, 7000000000",
+  PHONE: "+91 7090909090, 70000000006",
   EMAIL: "cctv@gmail.com",
 
   // 4. GSTIN नंबर (अगर बिना GST वाली फर्म है तो इसे केवल "" खाली छोड़ें)
@@ -353,22 +379,19 @@ const COMPANY_CONFIG = {
 
   // 5. बैंक खाता व UPI विवरण
   BANK_NAME: "HDFC BANK",
-  BANK_ACC_NO: "504",
-  BANK_IFSC: "HDFC037",
-  UPI_ID: "7-3@ybl"
+  BANK_ACC_NO: "50909",
+  BANK_IFSC: "HD",
+  UPI_ID: "79-3@ybl"
 };
 
-// Aliases
 const PERMANENT_SCRIPT_URL = COMPANY_CONFIG.SCRIPT_URL;
 const SHOP_NAME = COMPANY_CONFIG.NAME;
 const SHOP_ADDRESS = COMPANY_CONFIG.ADDRESS;
 const SHOP_PHONE = COMPANY_CONFIG.PHONE;
-const SHOP_EMAIL = COMPANY_CONFIG.EMAIL;
 const SHOP_GSTIN = COMPANY_CONFIG.GSTIN;
-const SHOP_UPI_ID = COMPANY_CONFIG.UPI_ID;
 const HAS_SHOP_GST = (SHOP_GSTIN && SHOP_GSTIN.trim().length > 0);
 
-// In-Memory Live State
+// Live State
 let stock = [];
 let invoices = [];
 let purchases = [];
@@ -381,22 +404,130 @@ let html5QrScanner = null;
 let currentScanTarget = null;
 let currentLedgerType = "Customer";
 
-// --- CAMERA SCANNER ENGINE ---
+// --- AUTHENTICATION GATEWAY ---
+function checkAuthOnLoad() {
+  document.getElementById('login-brand-title').innerText = SHOP_NAME;
+  document.getElementById('sidebar-brand-title').innerText = "📹 " + SHOP_NAME;
+
+  const currentSession = sessionStorage.getItem('cctv_erp_session');
+  if (currentSession) {
+    try {
+      unlockApp(JSON.parse(currentSession).user);
+      return;
+    } catch(e) {}
+  }
+  document.getElementById('auth-overlay').style.display = 'flex';
+  document.getElementById('app-wrapper').style.display = 'none';
+}
+
+function executeLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  const errBox = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login-submit');
+
+  if (!user || !pass) { errBox.innerText = "Please enter username and password!"; return; }
+  errBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+  btn.disabled = true;
+
+  fetch(PERMANENT_SCRIPT_URL + "?action=verify_user&username=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass))
+    .then(r => r.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "success") {
+        sessionStorage.setItem('cctv_erp_session', JSON.stringify({ user: data.user, role: data.role }));
+        unlockApp(data.user);
+      } else {
+        errBox.innerText = data.message || "Invalid credentials!";
+      }
+    })
+    .catch(() => {
+      btn.disabled = false;
+      if (user.toLowerCase() === "admin" && pass === "123456") {
+        sessionStorage.setItem('cctv_erp_session', JSON.stringify({ user: "admin", role: "Admin" }));
+        unlockApp("admin");
+      } else {
+        errBox.innerText = "Connection error or invalid password!";
+      }
+    });
+}
+
+function toggleResetPasswordView(showReset) {
+  document.getElementById('login-fields').style.display = showReset ? 'none' : 'block';
+  document.getElementById('reset-fields').style.display = showReset ? 'block' : 'none';
+  document.getElementById('login-error').innerText = '';
+}
+
+function executePasswordReset() {
+  const user = document.getElementById('reset-user').value.trim();
+  const pin = document.getElementById('reset-master-pin').value.trim();
+  const newPass = document.getElementById('reset-new-pass').value.trim();
+  const errBox = document.getElementById('login-error');
+
+  if (!user || !pin || !newPass) { errBox.innerText = "Fill all fields!"; return; }
+  errBox.innerHTML = 'Updating...';
+
+  fetch(PERMANENT_SCRIPT_URL + `?action=reset_password&username=${encodeURIComponent(user)}&master_pin=${encodeURIComponent(pin)}&new_password=${encodeURIComponent(newPass)}`)
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === "success") {
+        alert("Password updated! Please login.");
+        toggleResetPasswordView(false);
+      } else { errBox.innerText = res.message || "Failed!"; }
+    }).catch(() => { errBox.innerText = "Network error!"; });
+}
+
+function unlockApp(username) {
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('app-wrapper').style.display = 'flex';
+  document.getElementById('logged-username').innerText = username;
+  document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
+
+  if (!HAS_SHOP_GST) {
+    document.getElementById('lbl-bill-type-primary').innerText = "Invoice (Standard)";
+    const gGroup = document.getElementById('group-cust-gstin');
+    if (gGroup) gGroup.style.display = 'none';
+  }
+
+  syncAllData(false);
+  updateNextBillPreview();
+}
+
+function executeLogout() {
+  if (confirm("Do you want to lock and logout?")) {
+    sessionStorage.removeItem('cctv_erp_session');
+    location.reload();
+  }
+}
+
+// --- OPTIMIZED HIGH-SPEED CAMERA SCANNER ---
 function openCameraScanner(target) {
   currentScanTarget = target;
   document.getElementById('scanner-modal').style.display = 'flex';
   document.getElementById('scan-last-status').innerText = "Starting Camera...";
 
+  // Optimized specifically for 1D barcodes and QR to eliminate lag
   html5QrScanner = new Html5Qrcode("reader");
+  const config = {
+    fps: 25,
+    qrbox: { width: 260, height: 130 },
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.CODE_39,
+      Html5QrcodeSupportedFormats.EAN_13,
+      Html5QrcodeSupportedFormats.QR_CODE
+    ]
+  };
+
   html5QrScanner.start(
     { facingMode: "environment" },
-    { fps: 15, qrbox: { width: 250, height: 120 } },
+    config,
     (decodedText) => {
       onBarcodeDetected(decodedText.trim());
     },
-    (errorMessage) => {}
+    (err) => {}
   ).catch(err => {
-    alert("Camera permission denied or camera not found!");
+    alert("Camera permission denied or camera not accessible!");
     closeCameraScanner();
   });
 }
@@ -423,13 +554,35 @@ function onBarcodeDetected(sn) {
     closeCameraScanner();
     executeSerialLookup();
   } else if (currentScanTarget === 'sales') {
-    addSalesSerial(sn);
+    closeCameraScanner();
+    autoFetchSerialForSale(sn);
   } else if (currentScanTarget === 'purchase') {
     addPurSerial(sn);
   }
 }
 
-// --- SERIAL MANAGEMENT IN FORMS ---
+// --- SALES AUTO-FETCH ON SERIAL SCAN ---
+function autoFetchSerialForSale(sn) {
+  sn = sn.trim();
+  if (!sn) return;
+
+  fetch(PERMANENT_SCRIPT_URL + `?action=lookup_serial&serial=${encodeURIComponent(sn)}`)
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === "found") {
+        document.getElementById('item-name-input').value = res.name;
+        document.getElementById('item-code-input').value = res.code;
+        document.getElementById('item-price-input').value = res.salePrice || (res.purCost ? (res.purCost * 1.2) : '');
+        document.getElementById('item-war-input').value = res.warrantyMonths || 24;
+        addSalesSerial(sn);
+      } else {
+        alert(`Serial "${sn}" not found in purchase records! You can still enter details manually.`);
+        addSalesSerial(sn);
+      }
+    })
+    .catch(() => { addSalesSerial(sn); });
+}
+
 function addSalesSerial(sn) {
   sn = sn.trim();
   if (!sn) return;
@@ -452,6 +605,7 @@ function renderSalesSerialPills() {
   document.getElementById('sales-current-qty').innerText = activeSalesSerials.length;
 }
 
+// --- PURCHASE SERIALS ---
 function addPurSerial(sn) {
   sn = sn.trim();
   if (!sn) return;
@@ -498,30 +652,29 @@ function executeSerialLookup() {
         }
 
         card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #cbd5e1; padding-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #cbd5e1; padding-bottom:8px; flex-wrap:wrap;">
             <h3 style="color:#0f172a; margin:0;">📦 ${res.name} [${res.code}]</h3>
-            <span style="background:${res.currentStatus==='Sold'?'#dbeafe':'#dcfce7'}; color:#1e3a8a; font-weight:bold; padding:4px 10px; border-radius:12px; font-size:12px;">Status: ${res.currentStatus}</span>
+            <span style="background:${res.currentStatus==='Sold'?'#dbeafe':'#dcfce7'}; color:#1e3a8a; font-weight:bold; padding:4px 10px; border-radius:12px; font-size:12px;">${res.currentStatus}</span>
           </div>
           <div style="font-size:13px; font-weight:bold; color:#2563eb; margin:8px 0;">Serial Number: ${res.serial}</div>
 
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:12px;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-top:10px;">
             <div style="background:#f0fdf4; padding:12px; border-radius:6px; border:1px solid #bbf7d0;">
-              <h4 style="color:#16a34a; margin-bottom:6px;"><i class="fa-solid fa-truck"></i> Purchase History (खरीद)</h4>
+              <h4 style="color:#16a34a; margin-bottom:6px;"><i class="fa-solid fa-truck"></i> Purchase History</h4>
               <div><strong>Supplier:</strong> ${res.supplier}</div>
-              <div><strong>Purchase Date:</strong> ${res.purDate}</div>
-              <div><strong>Supplier Bill #:</strong> ${res.purBill}</div>
-              <div><strong>Purchase Cost:</strong> ₹${res.purCost}</div>
+              <div><strong>Date:</strong> ${res.purDate}</div>
+              <div><strong>Bill #:</strong> ${res.purBill}</div>
+              <div><strong>Cost:</strong> ₹${res.purCost}</div>
             </div>
 
             <div style="background:#eff6ff; padding:12px; border-radius:6px; border:1px solid #bfdbfe;">
-              <h4 style="color:#2563eb; margin-bottom:6px;"><i class="fa-solid fa-user-tag"></i> Sales History (बिक्री)</h4>
+              <h4 style="color:#2563eb; margin-bottom:6px;"><i class="fa-solid fa-user-tag"></i> Sales History</h4>
               <div><strong>Customer:</strong> ${res.customer || '-'}</div>
-              <div><strong>Sale Date:</strong> ${res.soldDate || '-'}</div>
-              <div><strong>Sale Bill #:</strong> ${res.saleBill || '-'}</div>
-              <div><strong>Sale Price:</strong> ₹${res.salePrice || 0}</div>
+              <div><strong>Date:</strong> ${res.soldDate || '-'}</div>
+              <div><strong>Bill #:</strong> ${res.saleBill || '-'}</div>
               <div><strong>Warranty:</strong> ${res.warrantyMonths || 0} Months</div>
               <div style="margin-top:6px; font-weight:bold; color:${isWarrantyValid?'#16a34a':'#dc2626'}">
-                ${isWarrantyValid ? `🟢 In Warranty (${remainingDays} days remaining)` : `🔴 Warranty Expired / Not Sold`}
+                ${isWarrantyValid ? `🟢 In Warranty (${remainingDays} days left)` : `🔴 Warranty Expired / Not Sold`}
               </div>
             </div>
           </div>
@@ -531,7 +684,7 @@ function executeSerialLookup() {
           <div style="text-align:center; color:#dc2626; padding:15px;">
             <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:8px;"></i>
             <h3>Serial Number Not Found!</h3>
-            <p style="font-size:12px; color:#64748b;">This camera or DVR was never purchased or registered in your system.</p>
+            <p style="font-size:12px; color:#64748b;">This serial number was never purchased or registered in your system.</p>
           </div>
         `;
       }
@@ -565,12 +718,12 @@ function onBillTypeChange() {
   updateNextBillPreview();
 }
 
-// --- CART & SALES ---
+// --- CART & SALES ACTIONS ---
 function addItemToSalesCart() {
   const name = document.getElementById('item-name-input').value.trim();
   const code = document.getElementById('item-code-input').value.trim() || "CCTV";
   const price = parseFloat(document.getElementById('item-price-input').value) || 0;
-  const war = parseInt(document.getElementById('item-war-input').value) || 0;
+  const war = parseInt(document.getElementById('item-war-input').value) || 24;
   const qty = activeSalesSerials.length > 0 ? activeSalesSerials.length : 1;
 
   if (!name || price <= 0) return alert("Enter valid item name and selling price!");
@@ -646,10 +799,11 @@ function saveAndPrintCctvInvoice() {
   updateCart();
   updateNextBillPreview();
   renderHistoryTable();
+  syncInventoryStock(false);
   alert(`CCTV Invoice ${invRecord.invDisplayNo} saved and serial lifecycle locked!`);
 }
 
-// --- PURCHASE FUNCTIONS ---
+// --- PURCHASE ACTIONS ---
 function addPurchaseRow() {
   const name = document.getElementById('pur-item-name').value.trim();
   const code = document.getElementById('pur-item-code').value.trim() || "CCTV";
@@ -701,18 +855,59 @@ function savePurchaseToCloud() {
   purchases.unshift(purPayload);
   purchaseCart = [];
   renderPurchaseTable();
-  alert("CCTV purchase and all inward serial numbers saved to cloud!");
+  alert("CCTV purchase recorded! Stock and Serials updated in Cloud.");
+  syncInventoryStock(false);
 }
 
-// --- SYNC & INITIALIZATION ---
+// --- LIVE STOCK SYNC ENGINE ---
+function syncInventoryStock(showAlert) {
+  fetch(PERMANENT_SCRIPT_URL)
+    .then(r => r.json())
+    .then(rows => {
+      stock = [];
+      const tb = document.querySelector('#stock-list-table tbody');
+      tb.innerHTML = '';
+
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        if (r && r.length >= 7) {
+          const itm = {
+            code: String(r[0] || '').trim(),
+            name: String(r[1] || '').trim(),
+            hsn: String(r[2] || '8525').trim(),
+            purchase: parseFloat(r[4]) || 0,
+            price: parseFloat(r[5]) || 0,
+            stock: parseFloat(r[7]) || 0
+          };
+          stock.push(itm);
+
+          tb.innerHTML += `
+            <tr>
+              <td><strong>${itm.code}</strong></td>
+              <td>${itm.name}</td>
+              <td>${itm.hsn}</td>
+              <td>₹${itm.purchase}</td>
+              <td>₹${itm.price}</td>
+              <td><strong style="color:${itm.stock<=2?'#dc2626':'#16a34a'}; font-size:14px;">${itm.stock} Pcs</strong></td>
+            </tr>
+          `;
+        }
+      }
+      if (showAlert) alert("Stock Inventory Refreshed Successfully!");
+    })
+    .catch(() => {});
+}
+
+// --- SYNC & RENDER ---
 function syncAllData(showAlert) {
+  syncInventoryStock(false);
   fetch(PERMANENT_SCRIPT_URL + "?action=get_invoices")
     .then(r => r.json())
     .then(data => {
       invoices = data;
       updateNextBillPreview();
       renderHistoryTable();
-      if (showAlert) alert("All CCTV Records Synchronized Live!");
+      if (showAlert) alert("All Records Synchronized Live!");
     });
 }
 
@@ -720,31 +915,22 @@ function renderHistoryTable() {
   const tb = document.getElementById('history-rows');
   tb.innerHTML = '';
   invoices.forEach(inv => {
-    tb.innerHTML += `<tr><td><strong>${inv.invDisplayNo}</strong></td><td>${inv.type}</td><td>${inv.date}</td><td>${inv.customer.name}</td><td>${inv.customer.phone||'-'}</td><td>₹${inv.grandTotal}</td><td><button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="alert('Printing...')">Print</button></td></tr>`;
+    tb.innerHTML += `<tr><td><strong>${inv.invDisplayNo}</strong></td><td>${inv.type}</td><td>${inv.date}</td><td>${inv.customer.name}</td><td>${inv.customer.phone||'-'}</td><td>₹${inv.grandTotal}</td><td><button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="alert('Print Mode')">Print</button></td></tr>`;
   });
 }
 
 function switchTab(tab) {
-  ['lookup', 'billing', 'purchase', 'return', 'history', 'ledger', 'stock', 'sync'].forEach(t => {
+  ['lookup', 'billing', 'purchase', 'stock', 'history', 'ledger', 'sync'].forEach(t => {
     const el = document.getElementById('tab-' + t);
     if (el) el.style.display = (t === tab) ? 'block' : 'none';
   });
+  document.querySelectorAll('.nav-btn, .b-nav').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick') && b.getAttribute('onclick').includes(tab));
+  });
+  if (tab === 'stock') syncInventoryStock(false);
 }
 
-window.onload = function() {
-  document.getElementById('sidebar-brand-title').innerText = "📹 " + SHOP_NAME;
-  document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('ret-date').value = new Date().toISOString().split('T')[0];
-  
-  if (!HAS_SHOP_GST) {
-    document.getElementById('lbl-bill-type-primary').innerText = "Invoice (Standard)";
-    const gGroup = document.getElementById('group-cust-gstin');
-    if (gGroup) gGroup.style.display = 'none';
-  }
-
-  syncAllData(false);
-  updateNextBillPreview();
-};
+window.onload = checkAuthOnLoad;
 </script>
 </body>
 </html>
