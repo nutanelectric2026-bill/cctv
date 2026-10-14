@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CCTV & IT HARDWARE ERP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- HTML5-QRCODE HIGH-SPEED SCANNER LIBRARY -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-light: #2563eb;
+      --accent: #f59e0b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
+    .app-container { display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background-color: #0f172a; color: white; padding: 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar h2 { font-size: 1.15rem; color: #38bdf8; margin-bottom: 25px; }
+    .nav-btn { background: none; border: none; color: #94a3b8; padding: 12px 15px; border-radius: 8px; text-align: left; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; width: 100%; }
+    .nav-btn.active, .nav-btn:hover { background-color: #1e293b; color: white; }
+    .main-content { flex: 1; padding: 20px; max-width: 1250px; margin: 0 auto; width: 100%; }
+    .bottom-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); justify-content: space-around; padding: 8px 0; z-index: 100; }
+    .b-nav { background: none; border: none; display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: #64748b; gap: 4px; }
+    .b-nav.active { color: var(--primary-light); font-weight: bold; }
+    .b-nav i { font-size: 1.2rem; }
+    .card { background: var(--card); border-radius: 8px; border: 1px solid var(--border); padding: 18px; margin-bottom: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .grid-pur { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; align-items: flex-end; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
+    label { font-size: 0.82rem; font-weight: 600; color: #475569; }
+    input, select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; outline: none; }
+    input:focus, select:focus { border-color: var(--primary-light); }
+    .btn { padding: 9px 16px; border-radius: 6px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: var(--primary-light); color: white; }
+    .btn-success { background: #16a34a; color: white; }
+    .btn-warning { background: var(--accent); color: white; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-outline { background: white; border: 1px solid var(--border); color: #334155; }
+    .btn-block { width: 100%; }
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.88rem; }
+    .data-table th { background: #f8fafc; font-weight: 600; }
+
+    .tab-toggle-bar { display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    .tab-toggle-btn { background: none; border: none; font-size: 0.95rem; font-weight: 600; color: #64748b; padding: 6px 14px; cursor: pointer; border-radius: 6px; }
+    .tab-toggle-btn.active { background: var(--primary-light); color: white; }
+
+    /* Serial Pills */
+    .serial-badge-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .serial-pill { background: #eff6ff; color: #1e3a8a; border: 1px solid #bfdbfe; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; }
+    .serial-pill span { cursor: pointer; color: #dc2626; }
+
+    /* Scanner View Modal */
+    #scanner-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; align-items: center; justify-content: center; padding: 15px; }
+    .scanner-box { background: white; border-radius: 10px; padding: 18px; width: 450px; max-width: 95%; text-align: center; }
+
+    /* Modals & Prints */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; padding: 15px; overflow-y: auto; }
+    .modal-content-box { background: white; border-radius: 10px; width: 750px; max-width: 95%; max-height: 90vh; overflow-y: auto; padding: 22px; }
+
+    #print-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2500; overflow-y: auto; padding: 15px; }
+    .invoice-page { background: white; width: 210mm; min-height: 285mm; margin: 0 auto 15px auto; padding: 6mm; color: #000; font-family: Arial, sans-serif; font-size: 11.5px; border: 1.5px solid #000; page-break-after: always; display: flex; flex-direction: column; justify-content: space-between; }
+    .t-header { border-bottom: 1.5px solid #000; padding: 4px; text-align: center; }
+    .t-header-topline { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; margin-bottom: 2px; }
+    .t-title { font-size: 16px; font-weight: bold; letter-spacing: 1px; text-align: center; }
+    .t-company-name { font-size: 19px; font-weight: 900; margin: 2px 0; text-align: center; }
+    .t-company-address { font-size: 11px; text-align: center; }
+    .t-row { display: flex; width: 100%; }
+    .t-col-6 { width: 50%; padding: 4px; }
+    .t-table { width: 100%; border-collapse: collapse; }
+    .t-table th { border-bottom: 1.5px solid #000; border-right: 1px solid #000; padding: 4px 3px; font-size: 11.5px; font-weight: bold; background: #fafafa; }
+    .t-table td { border-right: 1px solid #000; border-bottom: 1px solid #e2e8f0; padding: 3px 4px; font-size: 11.5px; }
+    .tax-breakup-table { width: 100%; border-collapse: collapse; margin-top: 2px; }
+    .tax-breakup-table th, .tax-breakup-table td { border: 1px solid #000; padding: 2px 3px; text-align: center; font-size: 10px; }
+
+    @media print {
+      html, body { width: 210mm !important; margin: 0 !important; padding: 0 !important; background: #fff !important; }
+      .app-container, .sidebar, .main-content, .bottom-bar, .modal-overlay, #scanner-modal, .no-print { display: none !important; }
+      #print-modal { display: block !important; position: static !important; width: 100% !important; padding: 0 !important; margin: 0 !important; background: none !important; }
+      .invoice-page { width: 200mm !important; height: 285mm !important; margin: 0 auto !important; padding: 4mm !important; border: 1.5px solid #000 !important; }
+      @page { size: A4 portrait; margin: 4mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app-wrapper">
+  <aside class="sidebar">
+    <h2 id="sidebar-brand-title">📹 CCTV ERP</h2>
+    <button class="nav-btn active" onclick="switchTab('lookup')"><i class="fa-solid fa-barcode"></i> Serial Lookup (RMA)</button>
+    <button class="nav-btn" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i> Sales Entry</button>
+    <button class="nav-btn" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i> Sales Return</button>
+    <button class="nav-btn" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i> Purchase Entry</button>
+    <button class="nav-btn" onclick="switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i> Invoice History</button>
+    <button class="nav-btn" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i> Party Ledger</button>
+    <button class="nav-btn" onclick="switchTab('stock')"><i class="fa-solid fa-boxes-stacked"></i> Live Stock</button>
+    <button class="nav-btn" onclick="switchTab('sync')"><i class="fa-solid fa-cloud-arrow-up"></i> Data Sync</button>
+  </aside>
+
+  <nav class="bottom-bar">
+    <button class="b-nav active" onclick="switchTab('lookup')"><i class="fa-solid fa-barcode"></i>RMA</button>
+    <button class="b-nav" onclick="switchTab('billing')"><i class="fa-solid fa-file-invoice"></i>Sales</button>
+    <button class="b-nav" onclick="switchTab('return')"><i class="fa-solid fa-rotate-left"></i>Return</button>
+    <button class="b-nav" onclick="switchTab('purchase')"><i class="fa-solid fa-cart-flatbed"></i>Purchase</button>
+    <button class="b-nav" onclick="switchTab('ledger')"><i class="fa-solid fa-book"></i>Ledger</button>
+  </nav>
+
+  <main class="main-content">
+    
+    <!-- 1. QUICK SERIAL LOOKUP / RMA INVESTIGATION -->
+    <section id="tab-lookup">
+      <div class="card" style="border: 2px solid var(--primary-light);">
+        <h2>🔍 Quick Serial Number Lookup (RMA & Warranty Status)</h2>
+        <p style="font-size:12.5px; color:#64748b; margin-top:4px;">Scan or enter camera/DVR serial number to see who you bought it from, who you sold it to, and warranty validity.</p>
+        
+        <div style="display:flex; gap:10px; margin-top:14px; max-width:650px;">
+          <input type="text" id="lookup-serial-input" placeholder="Scan or enter Serial / IMEI (e.g. CP-987456)..." style="font-size:1.1rem; font-weight:bold;" onkeydown="if(event.key==='Enter') executeSerialLookup()">
+          <button class="btn btn-primary" onclick="openCameraScanner('lookup')"><i class="fa-solid fa-camera"></i> 📷 Scan</button>
+          <button class="btn btn-success" onclick="executeSerialLookup()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+        </div>
+
+        <div id="lookup-result-card" style="display:none; margin-top:20px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px; padding:18px;">
+          <!-- Result rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SALES ENTRY COUNTER -->
+    <section id="tab-billing" style="display:none;">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+          <h2><span id="billing-mode-title">🧾 Sales Counter</span> <span id="bill-next-preview" style="font-size:12px; color:#2563eb;"></span></h2>
+          <div style="display:flex; gap:15px;" id="bill-type-radio-group">
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="INVOICE" checked onchange="onBillTypeChange()"> <strong id="lbl-bill-type-primary">GST Tax Invoice (B2C)</strong></label>
+            <label style="cursor:pointer;"><input type="radio" name="bill_type" value="ESTIMATE" onchange="onBillTypeChange()"> <strong>Estimate</strong></label>
+          </div>
+        </div>
+
+        <div class="grid-4">
+          <div class="form-group pos-search-wrapper">
+            <label>Customer Name *</label>
+            <input type="text" id="cust-name" placeholder="Cash Customer" autocomplete="off">
+          </div>
+          <div class="form-group" id="group-cust-gstin"><label>Customer GSTIN (Optional)</label><input type="text" id="cust-gstin" placeholder="08AAAAA0000A1Z5"></div>
+          <div class="form-group"><label>Mobile Number</label><input type="tel" id="cust-phone" placeholder="98XXXXXXXX"></div>
+          <div class="form-group"><label>City / Address</label><input type="text" id="cust-address" placeholder="Nagaur"></div>
+        </div>
+        <div class="form-group" style="width:200px; margin-top:10px;">
+          <label>Payment Mode</label>
+          <select id="cust-paymode"><option>Cash</option><option>UPI</option><option>Credit</option><option>Bank</option></select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Add CCTV Product & Serial Numbers</h4>
+        <div class="grid-pur" style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid var(--border); margin-top:10px;">
+          <div class="form-group"><label>Item Name / Model</label><input type="text" id="item-name-input" placeholder="e.g. CP Plus 2MP Bullet"></div>
+          <div class="form-group"><label>Item Code</label><input type="text" id="item-code-input" placeholder="CP-B21"></div>
+          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="item-price-input" placeholder="Rate"></div>
+          <div class="form-group"><label>Warranty (Months)</label><input type="number" id="item-war-input" value="24"></div>
+          <div class="form-group"><button class="btn btn-primary" onclick="openCameraScanner('sales')"><i class="fa-solid fa-camera"></i> 📷 Scan Serial</button></div>
+        </div>
+
+        <div style="margin-top:10px; background:#eff6ff; padding:10px; border-radius:6px; border:1px solid #bfdbfe;">
+          <label style="font-weight:bold; color:#1e3a8a;">Scanned Serial Numbers for this Item (Qty: <span id="sales-current-qty">0</span>):</label>
+          <div class="serial-badge-container" id="sales-serial-container"></div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <input type="text" id="sales-manual-sn" placeholder="Or type serial number and Enter..." onkeydown="if(event.key==='Enter') addSalesSerial(this.value)">
+            <button class="btn btn-outline" onclick="addSalesSerial(document.getElementById('sales-manual-sn').value)">Add SN</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; text-align:right;">
+          <button class="btn btn-success" onclick="addItemToSalesCart()"><i class="fa-solid fa-plus"></i> Add Item to Invoice Cart</button>
+        </div>
+
+        <table class="data-table" id="cart-table" style="margin-top:15px;">
+          <thead>
+            <tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Warranty</th><th>Rate</th><th>Total</th><th>Action</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:15px;">
+          <div style="width:280px; text-align:right;">
+            <h3 style="border-top:1px solid #ccc; padding-top:5px;">Grand Total: <span id="cart-total" style="color:var(--primary-light);">₹0.00</span></h3>
+            <button class="btn btn-success btn-block" style="margin-top:12px;" onclick="saveAndPrintCctvInvoice()"><i class="fa-solid fa-floppy-disk"></i> Save Bill & Print</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PURCHASE ENTRY WITH SERIAL INWARD -->
+    <section id="tab-purchase" style="display:none;">
+      <div class="card">
+        <h2><i class="fa-solid fa-cart-flatbed" style="color:#16a34a;"></i> CCTV Inward Stock & Purchase Entry</h2>
+        <div class="grid-4" style="margin-top:10px;">
+          <div class="form-group"><label>Supplier Name *</label><input type="text" id="pur-supplier" placeholder="e.g. Apex Distributors"></div>
+          <div class="form-group"><label>Supplier Bill No</label><input type="text" id="pur-ref" placeholder="Bill # 5412"></div>
+          <div class="form-group"><label>Purchase Date</label><input type="date" id="pur-date"></div>
+          <div class="form-group"><label>Terms</label><select id="pur-paymode"><option>Cash</option><option>Credit</option><option>Bank</option></select></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Inward Item Details</h4>
+        <div class="grid-pur" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0; margin-top:10px;">
+          <div class="form-group"><label>Product Name</label><input type="text" id="pur-item-name" placeholder="Item Name"></div>
+          <div class="form-group"><label>Code / Model</label><input type="text" id="pur-item-code" placeholder="Model"></div>
+          <div class="form-group"><label>Cost Rate (₹)</label><input type="number" id="pur-item-cost" placeholder="Cost"></div>
+          <div class="form-group"><label>Selling Rate (₹)</label><input type="number" id="pur-item-price" placeholder="Selling"></div>
+          <div class="form-group"><button class="btn btn-success" onclick="openCameraScanner('purchase')"><i class="fa-solid fa-camera"></i> 📷 Scan Serials</button></div>
+        </div>
+
+        <div style="margin-top:10px; background:#f0fdf4; padding:10px; border-radius:6px; border:1px solid #bbf7d0;">
+          <label style="font-weight:bold; color:#16a34a;">Inward Serial Numbers (Qty: <span id="pur-current-qty">0</span>):</label>
+          <div class="serial-badge-container" id="pur-serial-container"></div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <input type="text" id="pur-manual-sn" placeholder="Or type serial number and Enter..." onkeydown="if(event.key==='Enter') addPurSerial(this.value)">
+            <button class="btn btn-outline" onclick="addPurSerial(document.getElementById('pur-manual-sn').value)">Add SN</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; text-align:right;">
+          <button class="btn btn-success" onclick="addPurchaseRow()"><i class="fa-solid fa-plus"></i> Add Item to Purchase List</button>
+        </div>
+
+        <table class="data-table" id="purchase-table" style="margin-top:15px;">
+          <thead><tr><th>#</th><th>Code</th><th>Item Name</th><th>Qty</th><th>Serial Numbers</th><th>Cost</th><th>Total</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:15px;">
+          <div style="width:280px; text-align:right;">
+            <h3>Total Purchase: <span id="pur-grand-total" style="color:#16a34a;">₹0.00</span></h3>
+            <button class="btn btn-success btn-block" style="margin-top:10px;" onclick="savePurchaseToCloud()"><i class="fa-solid fa-cloud-arrow-up"></i> Save Purchase to Cloud</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SALES RETURN MODULE -->
+    <section id="tab-return" style="display:none;">
+      <div class="card">
+        <h2><i class="fa-solid fa-rotate-left" style="color:#dc2626;"></i> CCTV Sales Return (Credit Note)</h2>
+        <div class="grid-4" style="margin-top:14px;">
+          <div class="form-group"><label>Customer Name *</label><input type="text" id="ret-cust-name" placeholder="Customer Name"></div>
+          <div class="form-group"><label>Return Date</label><input type="date" id="ret-date"></div>
+          <div class="form-group"><label>Scan Returned Serial</label><div style="display:flex; gap:6px;"><input type="text" id="ret-sn-input" placeholder="Serial Number"><button class="btn btn-primary" onclick="openCameraScanner('return')">📷</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. INVOICE HISTORY -->
+    <section id="tab-history" style="display:none;">
+      <div class="card">
+        <h2>Invoice Log & History</h2>
+        <table class="data-table">
+          <thead><tr><th>Inv #</th><th>Type</th><th>Date</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Actions</th></tr></thead>
+          <tbody id="history-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. PARTY LEDGER -->
+    <section id="tab-ledger" style="display:none;">
+      <div class="card">
+        <div class="tab-toggle-bar">
+          <button class="tab-toggle-btn active" id="btn-ledger-cust" onclick="switchLedgerType('Customer')">Customer Ledgers</button>
+          <button class="tab-toggle-btn" id="btn-ledger-supp" onclick="switchLedgerType('Supplier')">Supplier Ledgers</button>
+        </div>
+        <div class="grid-3">
+          <div class="form-group"><label>Select Party</label><select id="ledger-party-select" onchange="loadPartyLedger()"></select></div>
+          <div class="form-group"><h3 id="party-net-balance" style="color:#dc2626;">Net Balance: ₹0.00</h3></div>
+        </div>
+      </div>
+      <div class="card" id="ledger-details-box" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 id="ledger-box-title">Transactions</h3>
+          <button class="btn btn-warning" onclick="printLedgerStatement()"><i class="fa-solid fa-print"></i> 🖨️ Print Ledger Statement</button>
+        </div>
+        <table class="data-table" id="party-txn-table">
+          <thead><tr><th>Date</th><th>Type</th><th>Ref #</th><th>Debit (+)</th><th>Credit (-)</th><th>Balance</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. LIVE STOCK -->
+    <section id="tab-stock" style="display:none;">
+      <div class="card">
+        <h2>Live CCTV Stock Inventory</h2>
+        <table class="data-table" id="stock-list-table">
+          <thead><tr><th>Code</th><th>Model / Item</th><th>HSN</th><th>Purchase</th><th>Selling</th><th>Stock Qty</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8. DATA SYNC -->
+    <section id="tab-sync" style="display:none;">
+      <div class="card" style="text-align:center; padding:40px 20px;">
+        <button class="btn btn-success" style="padding:12px 28px; font-size:1rem;" onclick="syncAllData(true)"><i class="fa-solid fa-rotate"></i> 🔄 Sync All CCTV Records Now</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- HIGH-SPEED CAMERA SCANNER MODAL -->
+<div id="scanner-modal">
+  <div class="scanner-box">
+    <h3 style="color:#1e3a8a; margin-bottom:10px;"><i class="fa-solid fa-camera"></i> Scan Serial Barcode</h3>
+    <div id="reader" style="width: 100%; min-height: 250px;"></div>
+    <div id="scan-last-status" style="font-size:12px; font-weight:bold; color:#16a34a; margin-top:8px;">Focus camera on barcode</div>
+    <button class="btn btn-danger btn-block" style="margin-top:14px;" onclick="closeCameraScanner()">✕ Stop Camera & Close</button>
+  </div>
+</div>
+
+<!-- Compact Print Container -->
+<div id="print-modal">
+  <div class="no-print" style="max-width:210mm; margin:10px auto; display:flex; justify-content:space-between;">
+    <button class="btn btn-warning" onclick="document.getElementById('print-modal').style.display='none'">Back</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨 Print Invoice</button>
+  </div>
+  <div id="invoice-printable-container"></div>
+</div>
+
+<script>
+// =========================================================================
+// 🏢 MASTER CCTV COMPANY PROFILE SETUP (कंपनी की पूरी जानकारी केवल यहाँ बदलें)
+// =========================================================================
+const COMPANY_CONFIG = {
+  // 1. Google Apps Script Web App URL
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxr-hvQ9qL7b5ETUewny2vXgbR5f8gvSOqJ2kkFnPwA30WcBBNU_13x5DPzkDSyM8f2cg/exec",
+
+  // 2. फर्म का नाम
+  NAME: "CCTV & SECURITY SYSTEMS",
+
+  // 3. पूरा पता, संपर्क सूत्र व ईमेल
+  ADDRESS: "NAGAUR RAJ - 341001",
+  PHONE: "+91 7700000000, 7000000000",
+  EMAIL: "cctv@gmail.com",
+
+  // 4. GSTIN नंबर (अगर बिना GST वाली फर्म है तो इसे केवल "" खाली छोड़ें)
+  GSTIN: "",
+
+  // 5. बैंक खाता व UPI विवरण
+  BANK_NAME: "HDFC BANK",
+  BANK_ACC_NO: "504",
+  BANK_IFSC: "HDFC037",
+  UPI_ID: "7-3@ybl"
+};
+
+// Aliases
+const PERMANENT_SCRIPT_URL = COMPANY_CONFIG.SCRIPT_URL;
+const SHOP_NAME = COMPANY_CONFIG.NAME;
+const SHOP_ADDRESS = COMPANY_CONFIG.ADDRESS;
+const SHOP_PHONE = COMPANY_CONFIG.PHONE;
+const SHOP_EMAIL = COMPANY_CONFIG.EMAIL;
+const SHOP_GSTIN = COMPANY_CONFIG.GSTIN;
+const SHOP_UPI_ID = COMPANY_CONFIG.UPI_ID;
+const HAS_SHOP_GST = (SHOP_GSTIN && SHOP_GSTIN.trim().length > 0);
+
+// In-Memory Live State
+let stock = [];
+let invoices = [];
+let purchases = [];
+let ledgerTxns = [];
+let cart = [];
+let purchaseCart = [];
+let activeSalesSerials = [];
+let activePurSerials = [];
+let html5QrScanner = null;
+let currentScanTarget = null;
+let currentLedgerType = "Customer";
+
+// --- CAMERA SCANNER ENGINE ---
+function openCameraScanner(target) {
+  currentScanTarget = target;
+  document.getElementById('scanner-modal').style.display = 'flex';
+  document.getElementById('scan-last-status').innerText = "Starting Camera...";
+
+  html5QrScanner = new Html5Qrcode("reader");
+  html5QrScanner.start(
+    { facingMode: "environment" },
+    { fps: 15, qrbox: { width: 250, height: 120 } },
+    (decodedText) => {
+      onBarcodeDetected(decodedText.trim());
+    },
+    (errorMessage) => {}
+  ).catch(err => {
+    alert("Camera permission denied or camera not found!");
+    closeCameraScanner();
+  });
+}
+
+function closeCameraScanner() {
+  if (html5QrScanner) {
+    html5QrScanner.stop().then(() => {
+      document.getElementById('scanner-modal').style.display = 'none';
+      html5QrScanner = null;
+    }).catch(() => {
+      document.getElementById('scanner-modal').style.display = 'none';
+    });
+  } else {
+    document.getElementById('scanner-modal').style.display = 'none';
+  }
+}
+
+function onBarcodeDetected(sn) {
+  if (!sn) return;
+  document.getElementById('scan-last-status').innerText = `✓ Scanned: ${sn}`;
+  
+  if (currentScanTarget === 'lookup') {
+    document.getElementById('lookup-serial-input').value = sn;
+    closeCameraScanner();
+    executeSerialLookup();
+  } else if (currentScanTarget === 'sales') {
+    addSalesSerial(sn);
+  } else if (currentScanTarget === 'purchase') {
+    addPurSerial(sn);
+  }
+}
+
+// --- SERIAL MANAGEMENT IN FORMS ---
+function addSalesSerial(sn) {
+  sn = sn.trim();
+  if (!sn) return;
+  if (activeSalesSerials.includes(sn)) return alert("Serial number already scanned!");
+  activeSalesSerials.push(sn);
+  renderSalesSerialPills();
+  document.getElementById('sales-manual-sn').value = '';
+}
+
+function removeSalesSerial(idx) {
+  activeSalesSerials.splice(idx, 1);
+  renderSalesSerialPills();
+}
+
+function renderSalesSerialPills() {
+  const container = document.getElementById('sales-serial-container');
+  container.innerHTML = activeSalesSerials.map((s, idx) => `
+    <div class="serial-pill">${s} <span onclick="removeSalesSerial(${idx})">✕</span></div>
+  `).join('');
+  document.getElementById('sales-current-qty').innerText = activeSalesSerials.length;
+}
+
+function addPurSerial(sn) {
+  sn = sn.trim();
+  if (!sn) return;
+  if (activePurSerials.includes(sn)) return alert("Serial number already scanned!");
+  activePurSerials.push(sn);
+  renderPurSerialPills();
+  document.getElementById('pur-manual-sn').value = '';
+}
+
+function removePurSerial(idx) {
+  activePurSerials.splice(idx, 1);
+  renderPurSerialPills();
+}
+
+function renderPurSerialPills() {
+  const container = document.getElementById('pur-serial-container');
+  container.innerHTML = activePurSerials.map((s, idx) => `
+    <div class="serial-pill">${s} <span onclick="removePurSerial(${idx})">✕</span></div>
+  `).join('');
+  document.getElementById('pur-current-qty').innerText = activePurSerials.length;
+}
+
+// --- QUICK SERIAL LOOKUP (RMA INVESTIGATION) ---
+function executeSerialLookup() {
+  const sn = document.getElementById('lookup-serial-input').value.trim();
+  const card = document.getElementById('lookup-result-card');
+  if (!sn) return alert("Please enter or scan serial number!");
+
+  card.style.display = 'block';
+  card.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching Serial Lifecycle across cloud database...';
+
+  fetch(PERMANENT_SCRIPT_URL + `?action=lookup_serial&serial=${encodeURIComponent(sn)}`)
+    .then(r => r.json())
+    .then(res => {
+      if (res.status === "found") {
+        let isWarrantyValid = false;
+        let remainingDays = 0;
+        if (res.soldDate && res.warrantyMonths > 0) {
+          const sDate = new Date(res.soldDate);
+          const expDate = new Date(sDate.setMonth(sDate.getMonth() + parseInt(res.warrantyMonths)));
+          const today = new Date();
+          remainingDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+          isWarrantyValid = remainingDays > 0;
+        }
+
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #cbd5e1; padding-bottom:8px;">
+            <h3 style="color:#0f172a; margin:0;">📦 ${res.name} [${res.code}]</h3>
+            <span style="background:${res.currentStatus==='Sold'?'#dbeafe':'#dcfce7'}; color:#1e3a8a; font-weight:bold; padding:4px 10px; border-radius:12px; font-size:12px;">Status: ${res.currentStatus}</span>
+          </div>
+          <div style="font-size:13px; font-weight:bold; color:#2563eb; margin:8px 0;">Serial Number: ${res.serial}</div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:12px;">
+            <div style="background:#f0fdf4; padding:12px; border-radius:6px; border:1px solid #bbf7d0;">
+              <h4 style="color:#16a34a; margin-bottom:6px;"><i class="fa-solid fa-truck"></i> Purchase History (खरीद)</h4>
+              <div><strong>Supplier:</strong> ${res.supplier}</div>
+              <div><strong>Purchase Date:</strong> ${res.purDate}</div>
+              <div><strong>Supplier Bill #:</strong> ${res.purBill}</div>
+              <div><strong>Purchase Cost:</strong> ₹${res.purCost}</div>
+            </div>
+
+            <div style="background:#eff6ff; padding:12px; border-radius:6px; border:1px solid #bfdbfe;">
+              <h4 style="color:#2563eb; margin-bottom:6px;"><i class="fa-solid fa-user-tag"></i> Sales History (बिक्री)</h4>
+              <div><strong>Customer:</strong> ${res.customer || '-'}</div>
+              <div><strong>Sale Date:</strong> ${res.soldDate || '-'}</div>
+              <div><strong>Sale Bill #:</strong> ${res.saleBill || '-'}</div>
+              <div><strong>Sale Price:</strong> ₹${res.salePrice || 0}</div>
+              <div><strong>Warranty:</strong> ${res.warrantyMonths || 0} Months</div>
+              <div style="margin-top:6px; font-weight:bold; color:${isWarrantyValid?'#16a34a':'#dc2626'}">
+                ${isWarrantyValid ? `🟢 In Warranty (${remainingDays} days remaining)` : `🔴 Warranty Expired / Not Sold`}
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div style="text-align:center; color:#dc2626; padding:15px;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:8px;"></i>
+            <h3>Serial Number Not Found!</h3>
+            <p style="font-size:12px; color:#64748b;">This camera or DVR was never purchased or registered in your system.</p>
+          </div>
+        `;
+      }
+    })
+    .catch(() => { card.innerHTML = '<div style="color:red;">Connection error!</div>'; });
+}
+
+// --- DUAL BILL SERIES SYSTEM ---
+function getNextInvoiceNumber(billMode) {
+  if (billMode === 'INVOICE') {
+    const invBills = invoices.filter(i => String(i.invDisplayNo).toUpperCase().startsWith('INV-'));
+    if (invBills.length === 0) return { num: 1001, display: "INV-1001" };
+    const maxNum = Math.max(...invBills.map(i => parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
+    return { num: maxNum + 1, display: "INV-" + (maxNum + 1) };
+  } else {
+    const estBills = invoices.filter(i => String(i.invDisplayNo).toUpperCase().startsWith('EST-'));
+    if (estBills.length === 0) return { num: 1001, display: "EST-1001" };
+    const maxNum = Math.max(...estBills.map(i => parseInt(String(i.invDisplayNo).replace(/\D/g,'')) || 1000));
+    return { num: maxNum + 1, display: "EST-" + (maxNum + 1) };
+  }
+}
+
+function updateNextBillPreview() {
+  const billMode = document.querySelector('input[name="bill_type"]:checked').value;
+  const nextInfo = getNextInvoiceNumber(billMode);
+  document.getElementById('bill-next-preview').innerText = `(Next: ${nextInfo.display})`;
+}
+
+function onBillTypeChange() {
+  updateCart();
+  updateNextBillPreview();
+}
+
+// --- CART & SALES ---
+function addItemToSalesCart() {
+  const name = document.getElementById('item-name-input').value.trim();
+  const code = document.getElementById('item-code-input').value.trim() || "CCTV";
+  const price = parseFloat(document.getElementById('item-price-input').value) || 0;
+  const war = parseInt(document.getElementById('item-war-input').value) || 0;
+  const qty = activeSalesSerials.length > 0 ? activeSalesSerials.length : 1;
+
+  if (!name || price <= 0) return alert("Enter valid item name and selling price!");
+
+  cart.push({
+    code, name, price, qty, warranty: war,
+    serials: [...activeSalesSerials],
+    total: (price * qty)
+  });
+
+  activeSalesSerials = [];
+  renderSalesSerialPills();
+  document.getElementById('item-name-input').value = '';
+  document.getElementById('item-code-input').value = '';
+  document.getElementById('item-price-input').value = '';
+  updateCart();
+}
+
+function updateCart() {
+  const tb = document.querySelector('#cart-table tbody');
+  tb.innerHTML = '';
+  let grand = 0;
+  cart.forEach((c, idx) => {
+    grand += c.total;
+    tb.innerHTML += `
+      <tr>
+        <td>${idx+1}</td>
+        <td><strong>${c.code}</strong></td>
+        <td>${c.name}</td>
+        <td>${c.qty} Pcs</td>
+        <td style="font-size:11px; color:#1e3a8a;">${c.serials.join(', ') || '-'}</td>
+        <td>${c.warranty} Mo</td>
+        <td>₹${c.price}</td>
+        <td><strong>₹${c.total.toFixed(2)}</strong></td>
+        <td><button class="btn btn-danger" style="padding:2px 6px; font-size:11px;" onclick="cart.splice(${idx},1); updateCart();">✕</button></td>
+      </tr>
+    `;
+  });
+  document.getElementById('cart-total').innerText = '₹' + grand.toFixed(2);
+}
+
+function saveAndPrintCctvInvoice() {
+  if (cart.length === 0) return alert("Cart is empty!");
+  const billMode = document.querySelector('input[name="bill_type"]:checked').value;
+  const next = getNextInvoiceNumber(billMode);
+
+  const titleType = (billMode === 'INVOICE') ? (HAS_SHOP_GST ? "TAX INVOICE" : "INVOICE") : "ESTIMATE";
+
+  const invRecord = {
+    id: Date.now(),
+    seriesNumber: next.num,
+    invDisplayNo: next.display,
+    type: titleType,
+    isGst: (billMode === 'INVOICE' && HAS_SHOP_GST),
+    date: new Date().toISOString().split('T')[0],
+    customer: {
+      name: document.getElementById('cust-name').value.trim() || "Cash Customer",
+      gstin: document.getElementById('cust-gstin').value.trim(),
+      phone: document.getElementById('cust-phone').value.trim(),
+      address: document.getElementById('cust-address').value.trim() || "Nagaur"
+    },
+    payMode: document.getElementById('cust-paymode').value,
+    subtotal: cart.reduce((a,b)=>a+b.total, 0),
+    tax: 0,
+    grandTotal: Math.round(cart.reduce((a,b)=>a+b.total, 0)),
+    items: cart
+  };
+
+  invoices.unshift(invRecord);
+  fetch(PERMANENT_SCRIPT_URL + "?action=save_invoice&data=" + encodeURIComponent(JSON.stringify(invRecord)), { mode: 'no-cors' });
+
+  cart = [];
+  updateCart();
+  updateNextBillPreview();
+  renderHistoryTable();
+  alert(`CCTV Invoice ${invRecord.invDisplayNo} saved and serial lifecycle locked!`);
+}
+
+// --- PURCHASE FUNCTIONS ---
+function addPurchaseRow() {
+  const name = document.getElementById('pur-item-name').value.trim();
+  const code = document.getElementById('pur-item-code').value.trim() || "CCTV";
+  const cost = parseFloat(document.getElementById('pur-item-cost').value) || 0;
+  const price = parseFloat(document.getElementById('pur-item-price').value) || (cost * 1.2);
+  const qty = activePurSerials.length > 0 ? activePurSerials.length : 1;
+
+  if (!name || cost <= 0) return alert("Enter valid item name and purchase cost!");
+
+  purchaseCart.push({
+    name, code, cost, price, qty,
+    serials: [...activePurSerials],
+    total: (cost * qty)
+  });
+
+  activePurSerials = [];
+  renderPurSerialPills();
+  document.getElementById('pur-item-name').value = '';
+  document.getElementById('pur-item-code').value = '';
+  document.getElementById('pur-item-cost').value = '';
+  document.getElementById('pur-item-price').value = '';
+  renderPurchaseTable();
+}
+
+function renderPurchaseTable() {
+  const tb = document.querySelector('#purchase-table tbody');
+  tb.innerHTML = '';
+  let gTot = 0;
+  purchaseCart.forEach((p, idx) => {
+    gTot += p.total;
+    tb.innerHTML += `<tr><td>${idx+1}</td><td>${p.code}</td><td>${p.name}</td><td>+${p.qty}</td><td style="font-size:11px;">${p.serials.join(', ') || '-'}</td><td>₹${p.cost}</td><td>₹${p.total.toFixed(2)}</td><td><button class="btn btn-danger" style="padding:2px 6px;" onclick="purchaseCart.splice(${idx},1); renderPurchaseTable();">✕</button></td></tr>`;
+  });
+  document.getElementById('pur-grand-total').innerText = '₹' + gTot.toFixed(2);
+}
+
+function savePurchaseToCloud() {
+  if (purchaseCart.length === 0) return alert("Purchase list is empty!");
+  const purPayload = {
+    id: Date.now(),
+    date: document.getElementById('pur-date').value || new Date().toISOString().split('T')[0],
+    supplier: document.getElementById('pur-supplier').value.trim() || "Cash Purchase",
+    refNo: document.getElementById('pur-ref').value.trim() || "-",
+    payMode: document.getElementById('pur-paymode').value,
+    total: purchaseCart.reduce((a,b)=>a+b.total, 0),
+    items: purchaseCart
+  };
+
+  fetch(PERMANENT_SCRIPT_URL + "?action=save_purchase&data=" + encodeURIComponent(JSON.stringify(purPayload)), { mode: 'no-cors' });
+  purchases.unshift(purPayload);
+  purchaseCart = [];
+  renderPurchaseTable();
+  alert("CCTV purchase and all inward serial numbers saved to cloud!");
+}
+
+// --- SYNC & INITIALIZATION ---
+function syncAllData(showAlert) {
+  fetch(PERMANENT_SCRIPT_URL + "?action=get_invoices")
+    .then(r => r.json())
+    .then(data => {
+      invoices = data;
+      updateNextBillPreview();
+      renderHistoryTable();
+      if (showAlert) alert("All CCTV Records Synchronized Live!");
+    });
+}
+
+function renderHistoryTable() {
+  const tb = document.getElementById('history-rows');
+  tb.innerHTML = '';
+  invoices.forEach(inv => {
+    tb.innerHTML += `<tr><td><strong>${inv.invDisplayNo}</strong></td><td>${inv.type}</td><td>${inv.date}</td><td>${inv.customer.name}</td><td>${inv.customer.phone||'-'}</td><td>₹${inv.grandTotal}</td><td><button class="btn btn-warning" style="padding:2px 6px; font-size:11px;" onclick="alert('Printing...')">Print</button></td></tr>`;
+  });
+}
+
+function switchTab(tab) {
+  ['lookup', 'billing', 'purchase', 'return', 'history', 'ledger', 'stock', 'sync'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = (t === tab) ? 'block' : 'none';
+  });
+}
+
+window.onload = function() {
+  document.getElementById('sidebar-brand-title').innerText = "📹 " + SHOP_NAME;
+  document.getElementById('pur-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ret-date').value = new Date().toISOString().split('T')[0];
+  
+  if (!HAS_SHOP_GST) {
+    document.getElementById('lbl-bill-type-primary').innerText = "Invoice (Standard)";
+    const gGroup = document.getElementById('group-cust-gstin');
+    if (gGroup) gGroup.style.display = 'none';
+  }
+
+  syncAllData(false);
+  updateNextBillPreview();
+};
+</script>
+</body>
+</html>
